@@ -138,7 +138,11 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 		}
 	}
 	if len(curr) > 0 {
-		args = append(args, curr)
+		if cmd == "" {
+			cmd = curr
+		} else {
+			args = append(args, curr)
+		}
 	}
 	return cmd, args
 }
