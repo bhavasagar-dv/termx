@@ -26,21 +26,6 @@ func main() {
 			max_cap--
 		}
 
-		// fmt.Println(extractArgsAndCmd(input[:max_cap]))
-		// input_eval := strings.Split(input[:max_cap], " ")
-		// if len(input_eval) == 0 {
-		// 	continue
-		// }
-
-		// cmd := input_eval[0]
-		// raw_args := input_eval[1:]
-		// var args []string
-		// for _, arg := range raw_args {
-		// 	arg = strings.ReplaceAll(strings.ReplaceAll(arg, "\"", ""), "'", "")
-		// 	if len(arg) > 0 {
-		// 		args = append(args, arg)
-		// 	}
-		// }
 		cmd, args := extractArgsAndCmd(input[:max_cap])
 
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
@@ -135,15 +120,19 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 		if char == rune(' ') && cmd == "" {
 			cmd = curr
 			curr = ""
-			continue
 		} else if char == rune(' ') && !open_quote {
-			args = append(args, curr)
+			if len(curr) > 0 {
+				args = append(args, curr)
+			}
 			curr = ""
-			continue
 		}
 
 		if char == rune('\'') || char == rune('"') {
 			open_quote = !open_quote
+		} else if char == rune(' ') {
+			if open_quote {
+				curr += string(char)
+			}
 		} else {
 			curr += string(char)
 		}
