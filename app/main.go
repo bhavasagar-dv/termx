@@ -35,7 +35,7 @@ func main() {
 		raw_args := input_eval[1:]
 		var args []string
 		for _, arg := range raw_args {
-			arg = strings.Trim(arg, "\"' ")
+			arg = strings.ReplaceAll(strings.ReplaceAll(arg, "\"", ""), "'", "")
 			if len(arg) > 0 {
 				args = append(args, arg)
 			}
