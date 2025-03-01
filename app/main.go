@@ -135,9 +135,11 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 		if char == rune(' ') && cmd == "" {
 			cmd = curr
 			curr = ""
+			continue
 		} else if char == rune(' ') && !open_quote {
 			args = append(args, curr)
 			curr = ""
+			continue
 		}
 
 		if char == rune('\'') || char == rune('"') {
