@@ -52,6 +52,11 @@ func main() {
 			fmt.Println(dir)
 		case "cd":
 			path := args[0]
+			if len(path) > 0 && strings.Contains(path, "~") {
+				home, _ := os.UserHomeDir()
+				path = strings.ReplaceAll(path, "~", home)
+			}
+
 			if checkIfPathExists(path) {
 				os.Chdir(path)
 			} else {
