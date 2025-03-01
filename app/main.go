@@ -33,6 +33,9 @@ func main() {
 
 		cmd := input_eval[0]
 		args := input_eval[1:]
+		for i, _ := range args {
+			args[i] = strings.Trim(args[i], "\"'")
+		}
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
 
 		switch cmd {
