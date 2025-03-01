@@ -32,9 +32,13 @@ func main() {
 		}
 
 		cmd := input_eval[0]
-		args := input_eval[1:]
-		for i, _ := range args {
-			args[i] = strings.Trim(args[i], "\"'")
+		raw_args := input_eval[1:]
+		var args []string
+		for _, arg := range raw_args {
+			arg = strings.Trim(arg, "\"' ")
+			if len(arg) > 0 {
+				args = append(args, arg)
+			}
 		}
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
 
