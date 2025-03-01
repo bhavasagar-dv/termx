@@ -26,20 +26,23 @@ func main() {
 			max_cap--
 		}
 
-		input_eval := strings.Split(input[:max_cap], " ")
-		if len(input_eval) == 0 {
-			continue
-		}
+		// fmt.Println(extractArgsAndCmd(input[:max_cap]))
+		// input_eval := strings.Split(input[:max_cap], " ")
+		// if len(input_eval) == 0 {
+		// 	continue
+		// }
 
-		cmd := input_eval[0]
-		raw_args := input_eval[1:]
-		var args []string
-		for _, arg := range raw_args {
-			arg = strings.ReplaceAll(strings.ReplaceAll(arg, "\"", ""), "'", "")
-			if len(arg) > 0 {
-				args = append(args, arg)
-			}
-		}
+		// cmd := input_eval[0]
+		// raw_args := input_eval[1:]
+		// var args []string
+		// for _, arg := range raw_args {
+		// 	arg = strings.ReplaceAll(strings.ReplaceAll(arg, "\"", ""), "'", "")
+		// 	if len(arg) > 0 {
+		// 		args = append(args, arg)
+		// 	}
+		// }
+		cmd, args := extractArgsAndCmd(input[:max_cap])
+
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
 
 		switch cmd {
@@ -121,4 +124,30 @@ func checkIfPathExists(path string) bool {
 		return true
 	}
 	return false
+}
+
+func extractArgsAndCmd(input_str string) (string, []string) {
+	cmd := ""
+	var args []string
+	curr := ""
+	open_quote := false
+	for _, char := range input_str {
+		if char == rune(' ') && cmd == "" {
+			cmd = curr
+			curr = ""
+		} else if char == rune(' ') && !open_quote {
+			args = append(args, curr)
+			curr = ""
+		}
+
+		if char == rune('\'') || char == rune('"') {
+			open_quote = !open_quote
+		} else {
+			curr += string(char)
+		}
+	}
+	if len(curr) > 0 {
+		args = append(args, curr)
+	}
+	return cmd, args
 }
