@@ -117,6 +117,7 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 	curr := ""
 	open_single_quote := false
 	open_double_quote := false
+	prev_backslash := false
 	for _, char := range input_str {
 		if char == rune(' ') && cmd == "" {
 			cmd = curr
@@ -130,10 +131,15 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 
 		if char == rune('"') {
 			open_double_quote = !open_double_quote
+		} else if char == rune('\\') && !open_double_quote && !open_single_quote {
+			prev_backslash = true
 		} else if char == rune('\'') && !open_double_quote {
 			open_single_quote = !open_single_quote
 		} else if char == rune(' ') {
-			if open_single_quote || open_double_quote {
+			if open_single_quote || open_double_quote || prev_backslash {
+				if prev_backslash {
+					prev_backslash = !prev_backslash
+				}
 				curr += string(char)
 			}
 		} else {
