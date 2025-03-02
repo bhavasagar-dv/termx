@@ -129,11 +129,11 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 			curr = ""
 		}
 
-		if char == rune('"') && !open_single_quote && !prev_backslash {
+		if char == rune('"') && !prev_backslash {
 			open_double_quote = !open_double_quote
 		} else if char == rune('\'') && !open_double_quote && !prev_backslash {
 			open_single_quote = !open_single_quote
-		} else if char == rune('\\') && !prev_backslash {
+		} else if char == rune('\\') && !open_double_quote && !prev_backslash {
 			prev_backslash = true
 		} else if char == rune(' ') && !prev_backslash {
 			if open_single_quote || open_double_quote {
