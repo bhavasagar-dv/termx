@@ -115,19 +115,15 @@ func main() {
 		if len(stdout) > 0 {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
-		} else if len(cmd_output) > 0 {
-			fmt.Println(cmd_output)
+		} else {
+			fmt.Fprintln(os.Stdout, cmd_output)
 		}
 
 		if len(stderr) > 0 {
 			CreateFile(stderr)
 			WriteToFile(stderr, cmd_err)
 		} else if len(cmd_err) > 0 {
-			fmt.Println(cmd_err)
-		}
-
-		if len(cmd_output) == 0 && len(cmd_err) == 0 {
-			fmt.Println()
+			fmt.Fprintln(os.Stderr, cmd_err)
 		}
 	}
 }
