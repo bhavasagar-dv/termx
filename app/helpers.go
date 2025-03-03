@@ -34,3 +34,22 @@ func CheckIfPathExists(path string) bool {
 	}
 	return false
 }
+
+func CreateFile(path string) {
+	if !CheckIfPathExists(path) {
+		file, _ := os.Create(path)
+		defer file.Close()
+	}
+}
+
+func WriteToFile(path string, content string) {
+	file, _ := os.Open(path)
+	file.Write([]byte(content))
+	defer file.Close()
+}
+
+func AppendToFile(path string, content string) {
+	file, _ := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer file.Close()
+	file.WriteString(content)
+}

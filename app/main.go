@@ -26,24 +26,37 @@ func main() {
 		}
 
 		cmd, args := ExtractArgsAndCmd(input[:max_cap])
+		stdout := ""
+		stderr := ""
+
+		for i, arg := range args {
+			if arg == "1>" || arg == ">" {
+				stdout = args[i+1]
+			} else if arg == "2>" {
+				stderr = args[i+1]
+			}
+		}
 
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
 
+		cmd_output := ""
+		cmd_err := ""
+
 		switch cmd {
 		case "echo":
-			fmt.Println(strings.Join(args, " "))
+			cmd_output = strings.Join(args, " ")
 		case "type":
 			cmd_path := GetCmdPath(args[0])
 			if Contains(builtins[:], args[0]) >= 0 {
-				fmt.Println(args[0], "is a shell builtin")
+				cmd_output = args[0] + " is a shell builtin"
 			} else if len(cmd_path) > 0 {
-				fmt.Println(args[0], "is", cmd_path)
+				cmd_output = args[0] + " is " + cmd_path
 			} else {
-				fmt.Println(args[0] + ": not found")
+				cmd_output = args[0] + ": not found"
 			}
 		case "pwd":
 			dir, _ := os.Getwd()
-			fmt.Println(dir)
+			cmd_output = dir
 		case "cd":
 			path := args[0]
 			if len(path) > 0 && strings.Contains(path, "~") {
@@ -54,7 +67,7 @@ func main() {
 			if CheckIfPathExists(path) {
 				os.Chdir(path)
 			} else {
-				fmt.Println("cd: " + path + ": No such file or directory")
+				cmd_output = "cd: " + path + ": No such file or directory"
 			}
 
 		case "exit":
@@ -75,8 +88,22 @@ func main() {
 					panic(err)
 				}
 			} else {
-				fmt.Println(cmd + ": command not found")
+				cmd_err = cmd + ": command not found"
 			}
+		}
+
+		if len(stdout) > 0 {
+			CreateFile(stdout)
+			WriteToFile(stdout, cmd_output)
+		} else {
+			fmt.Println(cmd_output)
+		}
+
+		if len(stderr) > 0 {
+			CreateFile(stderr)
+			WriteToFile(stderr, cmd_err)
+		} else {
+			fmt.Println(cmd_err)
 		}
 	}
 }
