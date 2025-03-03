@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -66,7 +65,7 @@ func main() {
 			os.Exit(exit_status)
 		default:
 			cmd_path := getCmdPath(cmd)
-			if len(cmd_path) > 0 || cmdExists(cmd) {
+			if len(cmd_path) > 0 || checkIfPathExists(cmd) {
 				program := exec.Command(cmd, args...)
 				program.Stderr = os.Stderr
 				program.Stdout = os.Stdout
@@ -97,7 +96,7 @@ func getCmdPath(cmd string) string {
 	}
 	paths := strings.Split(path_env, ":")
 	for _, path := range paths {
-		if _, err := os.Stat(path + "/" + cmd); !errors.Is(err, os.ErrNotExist) {
+		if checkIfPathExists(path + "/" + cmd) {
 			return path + "/" + cmd
 		}
 	}
@@ -160,12 +159,4 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 	}
 
 	return cmd, args
-}
-
-func cmdExists(execPath string) bool {
-	_, err := os.Stat(execPath)
-	if err != nil {
-		return false
-	}
-	return true
 }
