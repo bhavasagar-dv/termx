@@ -119,7 +119,7 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 	open_double_quote := false
 	prev_backslash := false
 	for _, char := range input_str {
-		if char == rune(' ') && cmd == "" && !prev_backslash {
+		if char == rune(' ') && cmd == "" && !open_single_quote && !open_double_quote && !prev_backslash {
 			cmd = curr
 			curr = ""
 		} else if char == rune(' ') && !open_single_quote && !open_double_quote && !prev_backslash {
@@ -159,5 +159,6 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 		cmd = "\"" + cmd + "\""
 	}
 
+	// fmt.Println(cmd, args, "test")
 	return cmd, args
 }
