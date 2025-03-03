@@ -101,7 +101,7 @@ func main() {
 					cmd_err = outErrBuffer.String()
 				}
 				if len(stdout) > 0 {
-					cmd_err = outBuffer.String()
+					cmd_output = outBuffer.String()
 				}
 
 				if err != nil {
