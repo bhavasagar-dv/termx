@@ -140,7 +140,12 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 				curr += string(char)
 			}
 		} else {
-			prev_backslash = false
+			if prev_backslash {
+				prev_backslash = false
+				if char != '\\' || char != '$' || char != '"' {
+					curr += string('\\')
+				}
+			}
 			curr += string(char)
 		}
 	}
