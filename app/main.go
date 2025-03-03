@@ -75,6 +75,7 @@ func main() {
 			_, err := program.Output()
 			if err != nil {
 				fmt.Println(cmd + ": command not found")
+				fmt.Println(err, "err")
 			}
 		}
 	}
