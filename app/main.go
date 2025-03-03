@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -65,11 +64,12 @@ func main() {
 			}
 			os.Exit(exit_status)
 		default:
-			execPath, execPathErr := filepath.Abs(cmd)
-			if execPathErr != nil {
-				fmt.Println(cmd + ": command not found [exec path err]")
-			}
-			program := exec.Command(execPath, args...)
+			// execPath, execPathErr := filepath.Abs(cmd)
+			// if execPathErr != nil {
+			// 	fmt.Println(cmd + ": command not found [exec path err]")
+			// }
+			cmd = getCmdPath(cmd)
+			program := exec.Command(cmd, args...)
 			program.Stderr = os.Stderr
 			program.Stdout = os.Stdout
 			_, err := program.Output()
@@ -92,7 +92,7 @@ func contains(arr []string, target string) int {
 func getCmdPath(cmd string) string {
 	path_env, exists := os.LookupEnv("PATH")
 	if !exists {
-		return ""
+		return cmd
 	}
 	paths := strings.Split(path_env, ":")
 	for _, path := range paths {
@@ -100,7 +100,7 @@ func getCmdPath(cmd string) string {
 			return path + "/" + cmd
 		}
 	}
-	return ""
+	return cmd
 }
 
 func checkIfPathExists(path string) bool {
