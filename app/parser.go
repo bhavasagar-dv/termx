@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func ExtractArgsAndCmd(input_str string) (string, []string) {
 	cmd := ""
 	var args []string
@@ -43,6 +45,6 @@ func ExtractArgsAndCmd(input_str string) (string, []string) {
 			args = append(args, curr)
 		}
 	}
-
+	fmt.Println(cmd, args, "tst")
 	return cmd, args
 }

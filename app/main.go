@@ -67,6 +67,7 @@ func main() {
 			cmd_path := GetCmdPath(cmd)
 			if len(cmd_path) > 0 {
 				program := exec.Command(cmd, args...)
+				program.Stdin = os.Stdin
 				program.Stderr = os.Stderr
 				program.Stdout = os.Stdout
 				err := program.Run()
