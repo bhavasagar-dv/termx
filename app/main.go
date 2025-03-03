@@ -125,5 +125,9 @@ func main() {
 		} else if len(cmd_err) > 0 {
 			fmt.Println(cmd_err)
 		}
+
+		if len(cmd_output) == 0 && len(cmd_err) == 0 {
+			fmt.Println()
+		}
 	}
 }
