@@ -66,7 +66,7 @@ func main() {
 			os.Exit(exit_status)
 		default:
 			cmd_path := getCmdPath(cmd)
-			if len(cmd_path) > 0 {
+			if len(cmd_path) > 0 || cmdExists(cmd) {
 				program := exec.Command(cmd, args...)
 				program.Stderr = os.Stderr
 				program.Stdout = os.Stdout
@@ -159,6 +159,13 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 		cmd = "\"" + cmd + "\""
 	}
 
-	// fmt.Println(cmd, args, "test")
 	return cmd, args
+}
+
+func cmdExists(execPath string) bool {
+	_, err := os.Stat(execPath)
+	if err != nil {
+		return false
+	}
+	return true
 }
