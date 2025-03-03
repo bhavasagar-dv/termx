@@ -140,7 +140,7 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 				curr += string(char)
 			}
 		} else {
-			if prev_backslash && char != rune('\\') && char != rune('$') && char != rune('"') {
+			if prev_backslash && open_double_quote && char != rune('\\') && char != rune('$') && char != rune('"') {
 				curr += string('\\')
 			}
 			prev_backslash = false
