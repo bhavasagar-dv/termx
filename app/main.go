@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -83,9 +84,27 @@ func main() {
 			if len(cmd_path) > 0 {
 				program := exec.Command(cmd, args...)
 				program.Stdin = os.Stdin
-				program.Stderr = os.Stderr
+				var outErrBuffer bytes.Buffer
+				var outBuffer bytes.Buffer
+				if len(stderr) > 0 {
+					program.Stderr = &outErrBuffer
+				} else {
+					program.Stderr = os.Stderr
+				}
+				if len(stdout) > 0 {
+					program.Stdout = &outBuffer
+				} else {
+					program.Stdout = os.Stdout
+				}
 				program.Stdout = os.Stdout
 				err := program.Run()
+				if len(stderr) > 0 {
+					cmd_err = outErrBuffer.String()
+				}
+				if len(stdout) > 0 {
+					cmd_err = outBuffer.String()
+				}
+
 				if err != nil {
 					panic(err)
 				}
