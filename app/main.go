@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -64,7 +65,11 @@ func main() {
 			}
 			os.Exit(exit_status)
 		default:
-			program := exec.Command(cmd, args...)
+			execPath, execPathErr := filepath.Abs(cmd)
+			if execPathErr != nil {
+				fmt.Println(cmd + ": command not found")
+			}
+			program := exec.Command(execPath, args...)
 			program.Stderr = os.Stderr
 			program.Stdout = os.Stdout
 			err := program.Run()
