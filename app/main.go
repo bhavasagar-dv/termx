@@ -67,7 +67,7 @@ func main() {
 		default:
 			execPath, execPathErr := filepath.Abs(cmd)
 			if execPathErr != nil {
-				fmt.Println(cmd + ": command not found")
+				fmt.Println(cmd + ": command not found [exec path err]")
 			}
 			program := exec.Command(execPath, args...)
 			program.Stderr = os.Stderr
