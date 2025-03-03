@@ -64,16 +64,11 @@ func main() {
 			}
 			os.Exit(exit_status)
 		default:
-			cmd_path := getCmdPath(cmd)
-			if len(cmd_path) > 0 || checkIfPathExists(cmd) {
-				program := exec.Command(cmd, args...)
-				program.Stderr = os.Stderr
-				program.Stdout = os.Stdout
-				err := program.Run()
-				if err != nil {
-					fmt.Println(cmd + ": command not found")
-				}
-			} else {
+			program := exec.Command(cmd, args...)
+			program.Stderr = os.Stderr
+			program.Stdout = os.Stdout
+			err := program.Run()
+			if err != nil {
 				fmt.Println(cmd + ": command not found")
 			}
 		}
