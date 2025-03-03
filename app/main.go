@@ -154,5 +154,10 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 			args = append(args, curr)
 		}
 	}
+
+	if strings.Contains(cmd, " ") {
+		cmd = "\"" + cmd + "\""
+	}
+
 	return cmd, args
 }
