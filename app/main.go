@@ -116,14 +116,14 @@ func main() {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
 		} else {
-			fmt.Fprintln(os.Stdout, cmd_output)
+			fmt.Fprint(os.Stdout, cmd_output)
 		}
 
 		if len(stderr) > 0 {
 			CreateFile(stderr)
 			WriteToFile(stderr, cmd_err)
 		} else if len(cmd_err) > 0 {
-			fmt.Fprintln(os.Stderr, cmd_err)
+			fmt.Fprint(os.Stderr, cmd_err)
 		}
 	}
 }
