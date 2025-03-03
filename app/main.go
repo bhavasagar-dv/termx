@@ -122,7 +122,7 @@ func main() {
 		if len(stderr) > 0 {
 			CreateFile(stderr)
 			WriteToFile(stderr, cmd_err)
-		} else {
+		} else if len(cmd_err) > 0 {
 			fmt.Println(cmd_err)
 		}
 	}
