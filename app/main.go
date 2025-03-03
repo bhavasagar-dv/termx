@@ -150,7 +150,7 @@ func extractArgsAndCmd(input_str string) (string, []string) {
 	}
 
 	if strings.Contains(cmd, " ") {
-		cmd = "`" + cmd + "`"
+		cmd = "'" + cmd + "'"
 	}
 
 	return cmd, args
