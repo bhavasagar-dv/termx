@@ -72,7 +72,7 @@ func main() {
 			program := exec.Command(execPath, args...)
 			program.Stderr = os.Stderr
 			program.Stdout = os.Stdout
-			err := program.Run()
+			_, err := program.Output()
 			if err != nil {
 				fmt.Println(cmd + ": command not found")
 			}
