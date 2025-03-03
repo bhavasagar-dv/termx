@@ -43,7 +43,7 @@ func CreateFile(path string) {
 }
 
 func WriteToFile(path string, content string) {
-	file, _ := os.Open(path)
+	file, _ := os.OpenFile(path, os.O_WRONLY, 0644)
 	file.WriteString(content)
 	defer file.Close()
 }
