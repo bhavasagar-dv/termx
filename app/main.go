@@ -69,7 +69,7 @@ func main() {
 				program := exec.Command(cmd, args...)
 				program.Stderr = os.Stderr
 				program.Stdout = os.Stdout
-				_, err := program.Output()
+				err := program.Run()
 				if err != nil {
 					panic(err)
 				}
