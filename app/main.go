@@ -32,8 +32,10 @@ func main() {
 		for i, arg := range args {
 			if arg == "1>" || arg == ">" {
 				stdout = args[i+1]
+				args = args[:i]
 			} else if arg == "2>" {
 				stderr = args[i+1]
+				args = args[:i]
 			}
 		}
 
