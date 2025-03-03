@@ -25,7 +25,7 @@ func main() {
 			max_cap--
 		}
 
-		cmd, args := extractArgsAndCmd(input[:max_cap])
+		cmd, args := ExtractArgsAndCmd(input[:max_cap])
 
 		builtins := [...]string{"echo", "type", "exit", "pwd"}
 
@@ -33,8 +33,8 @@ func main() {
 		case "echo":
 			fmt.Println(strings.Join(args, " "))
 		case "type":
-			cmd_path := getCmdPath(args[0])
-			if contains(builtins[:], args[0]) >= 0 {
+			cmd_path := GetCmdPath(args[0])
+			if Contains(builtins[:], args[0]) >= 0 {
 				fmt.Println(args[0], "is a shell builtin")
 			} else if len(cmd_path) > 0 {
 				fmt.Println(args[0], "is", cmd_path)
@@ -51,7 +51,7 @@ func main() {
 				path = strings.ReplaceAll(path, "~", home)
 			}
 
-			if checkIfPathExists(path) {
+			if CheckIfPathExists(path) {
 				os.Chdir(path)
 			} else {
 				fmt.Println("cd: " + path + ": No such file or directory")
@@ -64,7 +64,7 @@ func main() {
 			}
 			os.Exit(exit_status)
 		default:
-			cmd_path := getCmdPath(cmd)
+			cmd_path := GetCmdPath(cmd)
 			if len(cmd_path) > 0 {
 				program := exec.Command(cmd, args...)
 				program.Stderr = os.Stderr
@@ -78,81 +78,4 @@ func main() {
 			}
 		}
 	}
-}
-
-func contains(arr []string, target string) int {
-	for i, v := range arr {
-		if target == v {
-			return i
-		}
-	}
-	return -1
-}
-
-func getCmdPath(cmd string) string {
-	path_env, exists := os.LookupEnv("PATH")
-	if !exists {
-		return ""
-	}
-	paths := strings.Split(path_env, ":")
-	for _, path := range paths {
-		if checkIfPathExists(path + "/" + cmd) {
-			return path + "/" + cmd
-		}
-	}
-	return ""
-}
-
-func checkIfPathExists(path string) bool {
-	if _, err := os.Stat(path); err == nil {
-		return true
-	}
-	return false
-}
-
-func extractArgsAndCmd(input_str string) (string, []string) {
-	cmd := ""
-	var args []string
-	curr := ""
-	open_single_quote := false
-	open_double_quote := false
-	prev_backslash := false
-	for _, char := range input_str {
-		if char == rune(' ') && cmd == "" && !open_single_quote && !open_double_quote && !prev_backslash {
-			cmd = curr
-			curr = ""
-		} else if char == rune(' ') && !open_single_quote && !open_double_quote && !prev_backslash {
-			if len(curr) > 0 {
-				args = append(args, curr)
-			}
-			curr = ""
-		}
-
-		if char == rune('"') && !open_single_quote && !prev_backslash {
-			open_double_quote = !open_double_quote
-		} else if char == rune('\'') && !open_double_quote && !prev_backslash {
-			open_single_quote = !open_single_quote
-		} else if char == rune('\\') && !open_single_quote && !prev_backslash {
-			prev_backslash = true
-		} else if char == rune(' ') && !prev_backslash {
-			if open_single_quote || open_double_quote {
-				curr += string(char)
-			}
-		} else {
-			if prev_backslash && open_double_quote && char != rune('\\') && char != rune('$') && char != rune('"') {
-				curr += string('\\')
-			}
-			prev_backslash = false
-			curr += string(char)
-		}
-	}
-	if len(curr) > 0 {
-		if cmd == "" {
-			cmd = curr
-		} else {
-			args = append(args, curr)
-		}
-	}
-
-	return cmd, args
 }
