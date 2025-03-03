@@ -96,7 +96,6 @@ func main() {
 				} else {
 					program.Stdout = os.Stdout
 				}
-				program.Stdout = os.Stdout
 				err := program.Run()
 				if len(stderr) > 0 {
 					cmd_err = outErrBuffer.String()
