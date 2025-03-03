@@ -44,7 +44,7 @@ func CreateFile(path string) {
 
 func WriteToFile(path string, content string) {
 	file, _ := os.Open(path)
-	file.Write([]byte(content))
+	file.WriteString(content)
 	defer file.Close()
 }
 
