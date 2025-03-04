@@ -61,5 +61,21 @@ func AutoComplete(input string) string {
 			return cmd
 		}
 	}
+
+	path_env, exists := os.LookupEnv("PATH")
+	if !exists {
+		return ""
+	}
+	paths := strings.Split(path_env, ":")
+	for _, path := range paths {
+		entries, _ := os.ReadDir(path)
+		for _, item := range entries {
+			name := item.Name()
+			if !item.IsDir() && strings.HasPrefix(name, input) {
+				return name
+			}
+		}
+	}
+
 	return input
 }
