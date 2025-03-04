@@ -29,14 +29,19 @@ func main() {
 		cmd, args := ExtractArgsAndCmd(input[:max_cap])
 		stdout := ""
 		stderr := ""
+		append := false
 
 		for i, arg := range args {
-			if arg == "1>" || arg == ">" {
+			if arg == "1>" || arg == ">" || arg == ">>" || arg == "1>>" {
 				stdout = args[i+1]
 				args = args[:i]
-			} else if arg == "2>" {
+			} else if arg == "2>" || arg == "2>>" {
 				stderr = args[i+1]
 				args = args[:i]
+			}
+
+			if arg == ">>" || arg == "1>>" || arg == "2>>" {
+				append = true
 			}
 		}
 
@@ -101,14 +106,22 @@ func main() {
 
 		if len(stdout) > 0 {
 			CreateFile(stdout)
-			WriteToFile(stdout, cmd_output)
+			if append {
+				AppendToFile(stdout, cmd_output)
+			} else {
+				WriteToFile(stdout, cmd_output)
+			}
 		} else if len(cmd_output) > 0 {
 			fmt.Print(cmd_output)
 		}
 
 		if len(stderr) > 0 {
 			CreateFile(stderr)
-			WriteToFile(stderr, cmd_err)
+			if append {
+				AppendToFile(stderr, cmd_err)
+			} else {
+				WriteToFile(stderr, cmd_err)
+			}
 		} else if len(cmd_err) > 0 {
 			fmt.Print(cmd_err)
 		}
