@@ -72,6 +72,7 @@ func main() {
 			if len(args) > 0 {
 				exit_status, _ = strconv.Atoi(args[0])
 			}
+			fmt.Printf("\r")
 			os.Exit(exit_status)
 		default:
 			cmd_path := GetCmdPath(cmd)
