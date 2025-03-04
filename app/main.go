@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"os"
@@ -13,8 +12,7 @@ import (
 func main() {
 	for true {
 		fmt.Printf("\r$ ")
-		reader := bufio.NewReader(os.Stdin)
-		input := ReadInput(reader)
+		input := ReadInput(os.Stdin)
 
 		cmd, args := ExtractArgsAndCmd(strings.TrimSpace(input))
 		stdout := ""

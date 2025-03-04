@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -8,7 +9,7 @@ import (
 	"golang.org/x/term"
 )
 
-func ReadInput(reader io.ByteReader) string {
+func ReadInput(stdin io.Reader) string {
 	input := ""
 
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
@@ -16,6 +17,7 @@ func ReadInput(reader io.ByteReader) string {
 		panic(err)
 	}
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
+	reader := bufio.NewReader(stdin)
 
 loop:
 	for {
