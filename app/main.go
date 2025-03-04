@@ -95,7 +95,8 @@ func main() {
 				cmd_output = strings.TrimRight(outBuffer.String(), "\n")
 
 				if err != nil {
-					panic(err)
+					// panic(err)
+					cmd_err = err.Error()
 				}
 			} else {
 				cmd_err = cmd + ": command not found"
