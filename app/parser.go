@@ -17,6 +17,7 @@ func ReadInput(reader io.ByteReader) string {
 	}
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
+loop:
 	for {
 		b, err := reader.ReadByte()
 		if err != nil {
@@ -38,7 +39,7 @@ func ReadInput(reader io.ByteReader) string {
 		case '\n', '\r':
 			// new line
 			fmt.Printf("\n")
-			return input
+			break loop
 		case '\t':
 			suggestion := AutoComplete(input)
 			suffix := suggestion[len(input):] + " "
@@ -51,6 +52,7 @@ func ReadInput(reader io.ByteReader) string {
 			input += char
 		}
 	}
+	return input
 }
 
 func ExtractArgsAndCmd(input_str string) (string, []string) {
