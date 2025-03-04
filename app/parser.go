@@ -12,13 +12,9 @@ func ReadInput(reader io.ByteReader) string {
 	input := ""
 
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
-
 	if err != nil {
-
 		panic(err)
-
 	}
-
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
 	for {
@@ -55,8 +51,6 @@ func ReadInput(reader io.ByteReader) string {
 			input += char
 		}
 	}
-
-	return ""
 }
 
 func ExtractArgsAndCmd(input_str string) (string, []string) {

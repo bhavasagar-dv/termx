@@ -12,7 +12,7 @@ import (
 
 func main() {
 	for true {
-		fmt.Printf("$ ")
+		fmt.Printf("\r$ ")
 		reader := bufio.NewReader(os.Stdin)
 		input := ReadInput(reader)
 
@@ -102,7 +102,7 @@ func main() {
 				WriteToFile(stdout, cmd_output)
 			}
 		} else if len(cmd_output) > 0 {
-			fmt.Print(cmd_output)
+			fmt.Print("\r" + cmd_output)
 		}
 
 		if len(stderr) > 0 {
@@ -113,7 +113,7 @@ func main() {
 				WriteToFile(stderr, cmd_err)
 			}
 		} else if len(cmd_err) > 0 {
-			fmt.Print(cmd_err)
+			fmt.Print("\r" + cmd_err)
 		}
 	}
 }
