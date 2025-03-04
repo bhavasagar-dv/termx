@@ -84,25 +84,15 @@ func main() {
 			if len(cmd_path) > 0 {
 				program := exec.Command(cmd, args...)
 				program.Stdin = os.Stdin
+
 				var outErrBuffer bytes.Buffer
 				var outBuffer bytes.Buffer
-				if len(stderr) > 0 {
-					program.Stderr = &outErrBuffer
-				} else {
-					program.Stderr = os.Stderr
-				}
-				if len(stdout) > 0 {
-					program.Stdout = &outBuffer
-				} else {
-					program.Stdout = os.Stdout
-				}
+				program.Stderr = &outErrBuffer
+				program.Stdout = &outBuffer
+
 				err := program.Run()
-				if len(stderr) > 0 {
-					cmd_err = outErrBuffer.String()
-				}
-				if len(stdout) > 0 {
-					cmd_output = outBuffer.String()
-				}
+				cmd_err = outErrBuffer.String()
+				cmd_output = outBuffer.String()
 
 				if err != nil {
 					panic(err)
@@ -116,7 +106,7 @@ func main() {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
 		} else if len(cmd_output) > 0 {
-			fmt.Fprintln(os.Stdout, cmd_output)
+			fmt.Println(cmd_output)
 		}
 
 		if len(stderr) > 0 {
@@ -124,6 +114,10 @@ func main() {
 			WriteToFile(stderr, cmd_err)
 		} else if len(cmd_err) > 0 {
 			fmt.Fprintln(os.Stderr, cmd_err)
+		}
+
+		if len(cmd_output) == 0 && len(cmd_err) == 0 {
+			fmt.Println()
 		}
 	}
 }
