@@ -53,3 +53,13 @@ func AppendToFile(path string, content string) {
 	defer file.Close()
 	file.WriteString(content)
 }
+
+func AutoComplete(input string) string {
+	builtins := [...]string{"echo", "type", "exit", "pwd"}
+	for _, cmd := range builtins {
+		if strings.HasPrefix(cmd, input) {
+			return cmd
+		}
+	}
+	return input
+}

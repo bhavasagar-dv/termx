@@ -6,27 +6,63 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
+
+	"golang.org/x/term"
 )
 
 func main() {
 	for true {
 		fmt.Fprint(os.Stdout, "$ ")
-		input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		reader := bufio.NewReader(os.Stdin)
+		input := ""
+
+		oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error reading the input: ", err)
-			os.Exit(1)
+
+			panic(err)
+
 		}
 
-		runtime := runtime.GOOS
-		max_cap := len(input) - 1
-		if runtime == "windows" {
-			max_cap--
+		defer term.Restore(int(os.Stdin.Fd()), oldState)
+
+	loop:
+		for {
+			b, err := reader.ReadByte()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error reading the input: ", err)
+				os.Exit(1)
+			}
+
+			char := string(b)
+			switch b {
+			case '\x03':
+				// ctrl + c
+				os.Exit(0)
+			case '\x7F':
+				// backspace
+				if len(input) > 0 {
+					input = input[:len(input)-1]
+				}
+				fmt.Printf("\b \b")
+			case '\n', '\r':
+				// new line
+				fmt.Printf("\n")
+				break loop
+			case '\t':
+				suggestion := AutoComplete(input)
+				suffix := suggestion[len(input):] + " "
+				input += suffix
+				fmt.Printf("%s", suffix)
+			default:
+				fmt.Printf("%s", char)
+				input += char
+			}
 		}
 
-		cmd, args := ExtractArgsAndCmd(input[:max_cap])
+		cmd, args := ExtractArgsAndCmd(strings.TrimSpace(input))
 		stdout := ""
 		stderr := ""
 		append := false
