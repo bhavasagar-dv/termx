@@ -48,6 +48,8 @@ loop:
 			if len(suffix) > 1 {
 				input += suffix
 				fmt.Printf("%s", suffix)
+			} else {
+				fmt.Printf("\a")
 			}
 		default:
 			fmt.Printf("%s", char)
