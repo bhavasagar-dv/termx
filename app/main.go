@@ -92,7 +92,7 @@ func main() {
 
 				err := program.Run()
 				cmd_err = outErrBuffer.String()
-				cmd_output = outBuffer.String()
+				cmd_output = strings.TrimRight(outBuffer.String(), "\n")
 
 				if err != nil {
 					panic(err)
@@ -106,7 +106,7 @@ func main() {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
 		} else if len(cmd_output) > 0 {
-			fmt.Println(cmd_output)
+			fmt.Print(cmd_output)
 		}
 
 		if len(stderr) > 0 {
