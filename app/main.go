@@ -106,7 +106,7 @@ func main() {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
 		} else if len(cmd_output) > 0 {
-			fmt.Print(cmd_output)
+			fmt.Println(cmd_output)
 		}
 
 		if len(stderr) > 0 {
