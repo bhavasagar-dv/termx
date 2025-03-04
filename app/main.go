@@ -47,7 +47,7 @@ func main() {
 
 		switch cmd {
 		case "echo":
-			cmd_output = strings.Join(args, " ")
+			cmd_output = strings.Join(args, " ") + "\n"
 		case "type":
 			cmd_path := GetCmdPath(args[0])
 			if Contains(builtins[:], args[0]) >= 0 {
@@ -57,9 +57,10 @@ func main() {
 			} else {
 				cmd_output = args[0] + ": not found"
 			}
+			cmd_output += "\n"
 		case "pwd":
 			dir, _ := os.Getwd()
-			cmd_output = dir
+			cmd_output = dir + "\n"
 		case "cd":
 			path := args[0]
 			if len(path) > 0 && strings.Contains(path, "~") {
@@ -70,7 +71,7 @@ func main() {
 			if CheckIfPathExists(path) {
 				os.Chdir(path)
 			} else {
-				cmd_output = "cd: " + path + ": No such file or directory"
+				cmd_output = "cd: " + path + ": No such file or directory\n"
 			}
 
 		case "exit":
@@ -90,16 +91,11 @@ func main() {
 				program.Stderr = &outErrBuffer
 				program.Stdout = &outBuffer
 
-				err := program.Run()
+				program.Run()
 				cmd_err = outErrBuffer.String()
-				cmd_output = strings.TrimRight(outBuffer.String(), "\n")
-
-				if err != nil {
-					// panic(err)
-					cmd_err = err.Error()
-				}
+				cmd_output = outBuffer.String()
 			} else {
-				cmd_err = cmd + ": command not found"
+				cmd_err = cmd + ": command not found\n"
 			}
 		}
 
@@ -107,14 +103,14 @@ func main() {
 			CreateFile(stdout)
 			WriteToFile(stdout, cmd_output)
 		} else if len(cmd_output) > 0 {
-			fmt.Println(cmd_output)
+			fmt.Print(cmd_output)
 		}
 
 		if len(stderr) > 0 {
 			CreateFile(stderr)
 			WriteToFile(stderr, cmd_err)
 		} else if len(cmd_err) > 0 {
-			fmt.Fprintln(os.Stderr, cmd_err)
+			fmt.Print(cmd_err)
 		}
 
 		if len(cmd_output) == 0 && len(cmd_err) == 0 {
