@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"golang.org/x/term"
 )
@@ -12,12 +13,15 @@ import (
 func ReadInput(stdin io.Reader) string {
 	input := ""
 
-	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	fd := int(os.Stdin.Fd())
+	oldState, err := term.MakeRaw(fd)
 	if err != nil {
 		panic(err)
 	}
-	defer term.Restore(int(os.Stdin.Fd()), oldState)
+	defer term.Restore(fd, oldState)
+
 	reader := bufio.NewReader(stdin)
+	tabCnt := 0
 
 loop:
 	for {
@@ -36,16 +40,24 @@ loop:
 			// backspace
 			if len(input) > 0 {
 				input = input[:len(input)-1]
+				fmt.Printf("\b \b")
 			}
-			fmt.Printf("\b \b")
 		case '\n', '\r':
 			// new line
 			fmt.Printf("\n")
 			break loop
 		case '\t':
-			suggestion := AutoComplete(input)
-			suffix := suggestion[len(input):] + " "
-			if len(suffix) > 1 {
+			tabCnt++
+			suggestions := AutoComplete(input)
+			if tabCnt > 0 && tabCnt%2 == 0 && len(suggestions) > 1 {
+				term.Restore(fd, oldState)
+				fmt.Fprintln(os.Stdout, "\r"+strings.Join(suggestions, "  "))
+				fmt.Fprint(os.Stdout, "\r"+"$ ")
+				term.MakeRaw(fd)
+				fmt.Print(input)
+			}
+			if len(suggestions) == 1 && len(suggestions[0]) > len(input) {
+				suffix := suggestions[0][len(input):] + " "
 				input += suffix
 				fmt.Printf("%s", suffix)
 			} else {

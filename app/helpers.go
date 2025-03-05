@@ -54,17 +54,19 @@ func AppendToFile(path string, content string) {
 	file.WriteString(content)
 }
 
-func AutoComplete(input string) string {
+func AutoComplete(input string) []string {
 	builtins := [...]string{"echo", "type", "exit", "pwd"}
+	suggestions := make(map[string]int)
 	for _, cmd := range builtins {
 		if strings.HasPrefix(cmd, input) {
-			return cmd
+			// suggestions = append(suggestions, cmd)
+			suggestions[cmd] = 1
 		}
 	}
 
 	path_env, exists := os.LookupEnv("PATH")
 	if !exists {
-		return ""
+		return nil
 	}
 	paths := strings.Split(path_env, ":")
 	for _, path := range paths {
@@ -72,10 +74,16 @@ func AutoComplete(input string) string {
 		for _, item := range entries {
 			name := item.Name()
 			if !item.IsDir() && strings.HasPrefix(name, input) {
-				return name
+				// suggestions = append(suggestions, name)
+				suggestions[name] = 1
 			}
 		}
 	}
 
-	return input
+	var suggestionsList []string
+	for suggestion := range suggestions {
+		suggestionsList = append(suggestionsList, suggestion)
+	}
+
+	return suggestionsList
 }
