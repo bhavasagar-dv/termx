@@ -75,7 +75,6 @@ func AutoComplete(input string) []string {
 		for _, item := range entries {
 			name := item.Name()
 			if !item.IsDir() && strings.HasPrefix(name, input) {
-				// suggestions = append(suggestions, name)
 				suggestions[name] = 1
 			}
 		}
@@ -88,4 +87,35 @@ func AutoComplete(input string) []string {
 
 	sort.Strings(suggestionsList)
 	return suggestionsList
+}
+
+func LongesCommonSubstring(items []string) string {
+	if len(items) == 0 {
+		return ""
+	}
+
+	if len(items) == 1 {
+		return items[0]
+	}
+
+	res := items[0]
+	for _, str := range items[1:] {
+		res = subString(res, str)
+		if res == "" {
+			return res
+		}
+	}
+	return res
+}
+
+func subString(str1 string, str2 string) string {
+	idx := 0
+
+	for i, r := range str1 {
+		if i < len(str2) && r != rune(str2[i]) {
+			break
+		}
+		idx = i
+	}
+	return str1[:idx+1]
 }
