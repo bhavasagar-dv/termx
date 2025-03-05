@@ -56,7 +56,7 @@ func AppendToFile(path string, content string) {
 }
 
 func AutoComplete(input string) []string {
-	builtins := [...]string{"echo", "type", "exit", "pwd"}
+	builtins := [...]string{"echo", "echo2", "type", "pwd"}
 	suggestions := make(map[string]int)
 	for _, cmd := range builtins {
 		if strings.HasPrefix(cmd, input) {

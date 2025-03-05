@@ -49,19 +49,16 @@ loop:
 		case '\t':
 			tabCnt++
 			suggestions := AutoComplete(input)
-			if tabCnt > 0 && tabCnt%2 == 0 && len(suggestions) > 1 {
-				common_prefix := LongesCommonSubstring(suggestions)
-				if len(common_prefix) > 0 {
-					suffix := common_prefix[len(input):]
-					input += suffix
-					fmt.Printf("%s", suffix)
-				} else {
-					fmt.Fprintln(os.Stdout, "\r\n"+strings.Join(suggestions, "  "))
-					fmt.Fprintf(os.Stdout, "\r$ %s", input)
-					oldState, _ = term.MakeRaw(fd)
-				}
-			}
-			if len(suggestions) == 1 && len(suggestions[0]) > len(input) {
+			common_prefix := LongesCommonSubstring(suggestions)
+			if len(suggestions) > 1 && len(common_prefix) > 0 && len(common_prefix) > len(input) {
+				suffix := common_prefix[len(input):]
+				input += suffix
+				fmt.Printf("%s", suffix)
+			} else if tabCnt > 0 && tabCnt%2 == 0 && len(suggestions) > 1 {
+				fmt.Fprintln(os.Stdout, "\r\n"+strings.Join(suggestions, "  "))
+				fmt.Fprintf(os.Stdout, "\r$ %s", input)
+				oldState, _ = term.MakeRaw(fd)
+			} else if len(suggestions) == 1 && len(suggestions[0]) > len(input) {
 				suffix := suggestions[0][len(input):] + " "
 				input += suffix
 				fmt.Printf("%s", suffix)
