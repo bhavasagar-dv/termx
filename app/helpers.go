@@ -56,11 +56,10 @@ func AppendToFile(path string, content string) {
 }
 
 func AutoComplete(input string) []string {
-	builtins := [...]string{"echo", "echo2", "type", "pwd"}
+	builtins := [...]string{"echo", "exit", "type", "pwd"}
 	suggestions := make(map[string]int)
 	for _, cmd := range builtins {
 		if strings.HasPrefix(cmd, input) {
-			// suggestions = append(suggestions, cmd)
 			suggestions[cmd] = 1
 		}
 	}
@@ -95,7 +94,7 @@ func LongesCommonSubstring(items []string) string {
 	}
 
 	if len(items) == 1 {
-		return items[0]
+		return items[0] + " "
 	}
 
 	res := items[0]

@@ -58,7 +58,7 @@ loop:
 				fmt.Fprintln(os.Stdout, "\r\n"+strings.Join(suggestions, "  "))
 				fmt.Fprintf(os.Stdout, "\r$ %s", input)
 				oldState, _ = term.MakeRaw(fd)
-			} else if len(suggestions) == 1 && len(suggestions[0]) > len(input) {
+			} else if len(suggestions) == 1 && len(suggestions[0]) >= len(input) {
 				suffix := suggestions[0][len(input):] + " "
 				input += suffix
 				fmt.Printf("%s", suffix)
