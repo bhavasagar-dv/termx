@@ -57,7 +57,6 @@ loop:
 			} else if tabCnt > 0 && tabCnt%2 == 0 && len(suggestions) > 1 {
 				fmt.Fprintln(os.Stdout, "\r\n"+strings.Join(suggestions, "  "))
 				fmt.Fprintf(os.Stdout, "\r$ %s", input)
-				oldState, _ = term.MakeRaw(fd)
 			} else if len(suggestions) == 1 && len(suggestions[0]) >= len(input) {
 				suffix := suggestions[0][len(input):] + " "
 				input += suffix
@@ -65,6 +64,7 @@ loop:
 			} else {
 				fmt.Printf("\a")
 			}
+			oldState, _ = term.MakeRaw(fd)
 		default:
 			fmt.Printf("%s", char)
 			input += char
