@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -85,5 +86,6 @@ func AutoComplete(input string) []string {
 		suggestionsList = append(suggestionsList, suggestion)
 	}
 
+	sort.Strings(suggestionsList)
 	return suggestionsList
 }

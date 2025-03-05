@@ -50,11 +50,9 @@ loop:
 			tabCnt++
 			suggestions := AutoComplete(input)
 			if tabCnt > 0 && tabCnt%2 == 0 && len(suggestions) > 1 {
-				term.Restore(fd, oldState)
-				fmt.Fprintln(os.Stdout, "\r"+strings.Join(suggestions, "  "))
-				fmt.Fprint(os.Stdout, "\r"+"$ ")
-				term.MakeRaw(fd)
-				fmt.Print(input)
+				fmt.Fprintln(os.Stdout, "\r\n"+strings.Join(suggestions, "  "))
+				fmt.Fprintf(os.Stdout, "\r$ %s", input)
+				oldState, _ = term.MakeRaw(fd)
 			}
 			if len(suggestions) == 1 && len(suggestions[0]) > len(input) {
 				suffix := suggestions[0][len(input):] + " "
